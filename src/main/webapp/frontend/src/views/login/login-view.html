@@ -1,0 +1,78 @@
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../bower_components/vaadin-text-field/src/vaadin-text-field.html">
+<link rel="import" href="../../../bower_components/vaadin-text-field/src/vaadin-password-field.html">
+<link rel="import" href="../../../bower_components/vaadin-checkbox/src/vaadin-checkbox.html">
+<link rel="import" href="../../../bower_components/vaadin-button/src/vaadin-button.html">
+<link rel="import" href="../../../bower_components/vaadin-form-layout/src/vaadin-form-layout.html">
+<link rel="import" href="../../../bower_components/vaadin-form-layout/src/vaadin-form-item.html">
+
+<link rel="import" href="../../../styles/shared-styles.html">
+
+
+<dom-module id="login-view">
+    <style include="shared-styles">
+        .container {
+            height: 100%;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-layout {
+            width: 400px;
+        }
+
+        vaadin-text-field, vaadin-password-field {
+            width: 100%;
+        }
+
+        .error {
+            background-color: var(--lumo-error-color);
+            color: var(--lumo-error-contrast-color);
+            display: flex;
+            border-radius: var(--lumo-border-radius);
+            padding: var(--lumo-space-s);
+        }
+    </style>
+
+    <template>
+        <div class="container">
+            <vaadin-form-layout class="login-layout">
+                <vaadin-form-item>
+                    <h2 class="login-header">Sign in</h2>
+                </vaadin-form-item>
+                <vaadin-form-item>
+                    <label slot="label">Username</label>
+                    <vaadin-text-field value="{{username}}" autofocus required/>
+                </vaadin-form-item>
+                <vaadin-form-item>
+                    <label slot="label">Password</label>
+                    <vaadin-password-field value="{{password}}" required/>
+                </vaadin-form-item>
+                <vaadin-form-item>
+                    <vaadin-checkbox value="{{rememberMe}}"/>
+                    Remember me
+                </vaadin-form-item>
+                <vaadin-form-item>
+                    <template is="dom-if" if="[[error]]">
+                        <label class="error">[[error]]</label>
+                    </template>
+                </vaadin-form-item>
+                <vaadin-form-item>
+                    <vaadin-button on-click="onLogin">Login</vaadin-button>
+                </vaadin-form-item>
+            </vaadin-form-layout>
+        </div>
+    </template>
+
+    <script>
+        class LoginView extends Polymer.Element {
+            static get is() {
+                return 'login-view'
+            }
+        }
+
+        customElements.define(LoginView.is, LoginView);
+    </script>
+</dom-module>
