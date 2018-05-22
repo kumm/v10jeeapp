@@ -51,14 +51,15 @@ public class LoginView extends PolymerTemplate<LoginView.LoginModel>
 
     @EventHandler
     private void onLogin() {
+        LoginModel model = getModel();
         UsernamePasswordToken token = new UsernamePasswordToken(
-                getModel().getUsername(), getModel().getPassword());
+                model.getUsername(), model.getPassword(), model.isRememberMe());
         try {
             SecurityUtils.getSubject().login(token);
         } catch (IncorrectCredentialsException | UnknownAccountException e) {
-            getModel().setError("Wrong username or password.");
+            model.setError("Wrong username or password.");
         } catch (AuthenticationException e) {
-            getModel().setError("Authentication error.");
+            model.setError("Authentication error.");
             getLogger().error("Authentication error.", e);
             return;
         }
