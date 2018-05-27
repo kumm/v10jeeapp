@@ -22,5 +22,7 @@ public class SecurityInit {
         Long adminId = userService.createUser("root", "root");
         roleService.createRole("admin", Collections.singleton("*"));
         userService.grant(adminId, "admin");
+
+        userService.createUser("joe", "joe");
     }
 }

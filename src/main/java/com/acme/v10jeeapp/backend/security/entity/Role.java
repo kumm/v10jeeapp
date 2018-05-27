@@ -5,12 +5,17 @@ import com.acme.v10jeeapp.backend.AbstractEntity;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.NamedQuery;
 import java.util.HashSet;
 import java.util.Set;
 
+import static com.acme.v10jeeapp.backend.security.entity.Role.IDS_BY_USER_ID;
+
 @Entity
+@NamedQuery(name = IDS_BY_USER_ID,
+        query = "select r.id from User u, Role r where r member u.roles and u.id=:userId")
 public class Role extends AbstractEntity {
+    public static final String IDS_BY_USER_ID = "idsByUserId";
     @Id
     private String id;
     private String name;

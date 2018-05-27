@@ -17,7 +17,7 @@ because polymer templates, and web components are used.
 
 ## Running it
 
-Login with root/root. 
+Login with credentials printed on screen. 
 
 And currently this is the only function. More coming soon. 
 

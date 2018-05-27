@@ -17,8 +17,11 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.SimpleByteSource;
 
+import javax.ejb.ApplicationException;
+import javax.ejb.Stateless;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
 import javax.persistence.NoResultException;
 import java.util.Collection;
 import java.util.Set;
@@ -26,40 +29,31 @@ import java.util.stream.Collectors;
 
 
 public class ShiroRealm extends AuthorizingRealm {
-    private final Users users;
-    private final Roles roles;
-    private final PrincipalMapper principalMapper;
+    private final RealmService service;
 
     @Dependent
     public static class Producer {
 
         @Produces
         private ShiroRealm createRealm(
-                Users users,
-                Roles roles,
-                HashConfig hashConfig,
-                PrincipalMapper principalMapper) {
-            ShiroRealm realm = new ShiroRealm(users, roles, principalMapper);
-            realm.setRolePermissionResolver(realm::resolvePermissionsInRole);
+                RealmService service,
+                HashConfig hashConfig) {
+            ShiroRealm realm = new ShiroRealm(service);
+            realm.setRolePermissionResolver(service::resolvePermissionsInRole);
             realm.setCredentialsMatcher(hashConfig.createMatcher());
             realm.setCacheManager(new MemoryConstrainedCacheManager());
             return realm;
         }
     }
 
-    private ShiroRealm(Users users, Roles roles, PrincipalMapper principalMapper) {
+    private ShiroRealm(RealmService service) {
         super();
-        this.users = users;
-        this.roles = roles;
-        this.principalMapper = principalMapper;
+        this.service = service;
     }
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-        User user = users.findBy(principalMapper.getUserId(principals));
-        Set<String> roles = user.getRoles().stream()
-                .map(Role::getId).collect(Collectors.toSet());
-        return new SimpleAuthorizationInfo(roles);
+        return service.doGetAuthorizationInfo(principals);
     }
 
     @Override
@@ -69,23 +63,50 @@ public class ShiroRealm extends AuthorizingRealm {
             throw new UnsupportedTokenException();
         }
         String username = ((UsernamePasswordToken) token).getUsername();
-        User user;
-        try {
-            user = users.findByUsername(username);
-        } catch (NoResultException e) {
-            throw new UnknownAccountException();
+        return service.doGetAuthenticationInfo(username, getName());
+    }
+
+    @Stateless
+    public static class RealmService {
+        @Inject
+        private Users users;
+        @Inject
+        private Roles roles;
+        @Inject
+        private PrincipalMapper principalMapper;
+
+
+        public AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
+            Long userId = principalMapper.getUserId(principals);
+            Set<String> roleIds = users.findBy(userId).getRoles().stream()
+                    .map(Role::getId)
+                    .collect(Collectors.toSet());
+            return new SimpleAuthorizationInfo(roleIds);
         }
-        return new SimpleAuthenticationInfo(
-                principalMapper.toPrincipals(user, getName()),
-                user.getHash(),
-                new SimpleByteSource(Hex.decode(user.getSalt()))
-        );
+
+        public AuthenticationInfo doGetAuthenticationInfo(String username, String realmName)
+                throws UnknownUserException {
+            User user;
+            try {
+                user = users.findByUsername(username);
+            } catch (NoResultException e) {
+                throw new UnknownUserException();
+            }
+            return new SimpleAuthenticationInfo(
+                    principalMapper.toPrincipals(user, realmName),
+                    user.getHash(),
+                    new SimpleByteSource(Hex.decode(user.getSalt()))
+            );
+        }
+
+        public Collection<Permission> resolvePermissionsInRole(String roleString) {
+            return roles.findBy(roleString).getPermissions().stream()
+                    .map(WildcardPermission::new)
+                    .collect(Collectors.toList());
+        }
     }
 
-    private Collection<Permission> resolvePermissionsInRole(String roleString) {
-        return roles.findBy(roleString).getPermissions().stream()
-                .map(WildcardPermission::new)
-                .collect(Collectors.toList());
+    @ApplicationException
+    public static class UnknownUserException extends UnknownAccountException {
     }
-
 }

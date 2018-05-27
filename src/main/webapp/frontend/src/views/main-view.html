@@ -4,12 +4,22 @@
 
 <dom-module id="main-view">
     <style include="shared-styles">
+        .app-header {
+            display: flex;
+            flex-flow: row wrap;
+        }
     </style>
 
     <template>
         <div class="app-header">
-            <span>Hello [[username]]!</span>
-            <vaadin-button on-click="onLogout">Logout</vaadin-button>
+            <div class="app-menubar">
+                <a router-link href="">Home</a>
+                <a router-link href="users">Users Admin</a>
+            </div>
+            <div class="app-session">
+                <span>Hello [[username]]!</span>
+                <vaadin-button on-click="onLogout">Logout</vaadin-button>
+            </div>
         </div>
         <div>
             <slot></slot>

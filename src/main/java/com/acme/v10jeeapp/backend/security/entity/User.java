@@ -7,7 +7,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@NamedQuery(
+        name = User.ALL_FETCH_ROLES,
+        query = "SELECT u FROM User u LEFT JOIN FETCH u.roles")
 public class User extends AbstractEntity {
+    public static final String ALL_FETCH_ROLES = "allFetchRoles";
+
     @Id
     @GeneratedValue
     private Long id;
