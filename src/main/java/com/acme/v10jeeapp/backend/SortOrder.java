@@ -1,5 +1,7 @@
 package com.acme.v10jeeapp.backend;
 
+import org.apache.deltaspike.data.api.QueryResult;
+
 public class SortOrder {
     private final String property;
     private final boolean ascending;
@@ -9,12 +11,11 @@ public class SortOrder {
         this.ascending = ascending;
     }
 
-    public String getProperty() {
-        return property;
+    public void apply(QueryResult<?> queryResult) {
+        if (ascending) {
+            queryResult.orderAsc(property);
+        } else {
+            queryResult.orderDesc(property);
+        }
     }
-
-    public boolean isAscending() {
-        return ascending;
-    }
-
 }

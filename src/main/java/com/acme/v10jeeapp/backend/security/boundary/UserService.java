@@ -1,12 +1,10 @@
 package com.acme.v10jeeapp.backend.security.boundary;
 
-import com.acme.v10jeeapp.backend.SortOrder;
 import com.acme.v10jeeapp.backend.security.control.HashConfig;
 import com.acme.v10jeeapp.backend.security.control.Roles;
 import com.acme.v10jeeapp.backend.security.control.Users;
 import com.acme.v10jeeapp.backend.security.entity.Role;
 import com.acme.v10jeeapp.backend.security.entity.User;
-import org.apache.deltaspike.data.api.QueryResult;
 import org.apache.shiro.crypto.RandomNumberGenerator;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.Hash;
@@ -14,11 +12,8 @@ import org.apache.shiro.util.ByteSource;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
-
-import static com.acme.v10jeeapp.backend.SortOrders.applySortOrderList;
 
 @Stateless
 public class UserService {
@@ -44,16 +39,6 @@ public class UserService {
         User user = users.findBy(userId);
         Set<Role> grantedRoles = user.getRoles();
         Stream.of(role).map(this.roles::findBy).forEach(grantedRoles::add);
-    }
-
-    public List<User> list(int offset, int limit, List<SortOrder> sortBy) {
-        QueryResult<User> queryResult = users.findAllFetchRoles(offset, limit);
-        applySortOrderList(sortBy, queryResult,  s -> "u." + s);
-        return queryResult.getResultList();
-    }
-
-    public int count() {
-        return users.count().intValue();
     }
 
     private void generateSaltedHash(String password, User user) {
