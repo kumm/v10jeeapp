@@ -1,0 +1,22 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../styles/shared-styles.html">
+
+<dom-module id="unauthorized-error-view">
+    <style include="shared-styles">
+    </style>
+
+    <template>
+        <h1>Access Denied</h1>
+        <p>[[message]]</p>
+    </template>
+
+    <script>
+        class UnauthorizedErrorView extends Polymer.Element {
+            static get is() {
+                return 'unauthorized-error-view'
+            }
+        }
+
+        customElements.define(UnauthorizedErrorView.is, UnauthorizedErrorView);
+    </script>
+</dom-module>
