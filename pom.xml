@@ -99,6 +99,34 @@
                     <context>ROOT</context>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.bsc.maven</groupId>
+                <artifactId>maven-processor-plugin</artifactId>
+                <version>3.3.3</version>
+                <executions>
+                    <execution>
+                        <id>process</id>
+                        <goals>
+                            <goal>process</goal>
+                        </goals>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <compilerArguments>-Aopenjpa.metamodel=true</compilerArguments>
+                            <processors>
+                                <processor>org.apache.openjpa.persistence.meta.AnnotationProcessor6</processor>
+                            </processors>
+                            <outputDirectory>target/generated-sources/annotations</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.openjpa</groupId>
+                        <artifactId>openjpa</artifactId>
+                        <version>2.4.2</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
         </plugins>
     </build>
 
