@@ -3,7 +3,6 @@ package com.acme.v10jeeapp.app;
 import com.acme.v10jeeapp.backend.DataProviderService;
 import com.acme.v10jeeapp.backend.SortOrder;
 import com.vaadin.flow.data.provider.CallbackDataProvider;
-import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
 import com.vaadin.flow.data.provider.Query;
 
 import java.io.Serializable;
@@ -21,10 +20,8 @@ public class DataProviderBuilder<T, F> implements Serializable {
         this.service = service;
     }
 
-    public ConfigurableFilterDataProvider<T, Void, F> newDataProvider() {
-        CallbackDataProvider<T, F> dataProvider =
-                new CallbackDataProvider<>(this::fetch, this::count);
-        return dataProvider.withConfigurableFilter();
+    public CallbackDataProvider<T, F> newDataProvider() {
+        return new CallbackDataProvider<>(this::fetch, this::count);
     }
 
     private int count(Query<T, F> query) {

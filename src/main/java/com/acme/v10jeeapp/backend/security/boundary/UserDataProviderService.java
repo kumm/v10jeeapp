@@ -17,14 +17,21 @@ public class UserDataProviderService implements DataProviderService<User, String
 
     @Override
     public List<User> fetch(int offset, int limit, List<SortOrder> sortBy, String filter) {
-        QueryResult<User> queryResult = users.findAllFetchRoles(offset, limit);
+        QueryResult<User> queryResult = users.findFilteredFetchRoles(
+                offset, limit, likePattern(filter));
         sortBy.forEach(order -> order.apply(queryResult));
         return queryResult.getResultList();
     }
 
     @Override
     public int count(String filter) {
-        return users.count().intValue();
+        QueryResult<User> queryResult = users.findFilteredFetchRoles(
+                0, 0, likePattern(filter));
+        return (int) queryResult.count();
+    }
+
+    private String likePattern(String filter) {
+        return filter + "%";
     }
 
 }

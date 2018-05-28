@@ -10,6 +10,9 @@ public interface Users extends
 
     User findByUsername(String username);
 
-    @Query(named = User.ALL_FETCH_ROLES)
-    QueryResult<User> findAllFetchRoles(@FirstResult int offset, @MaxResults int limit);
+    @Query(named = User.FILTERED_FETCH_ROLES)
+    QueryResult<User> findFilteredFetchRoles(
+            @FirstResult int offset,
+            @MaxResults int limit,
+            @QueryParam("filter") String filter);
 }

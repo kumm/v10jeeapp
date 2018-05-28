@@ -5,12 +5,15 @@ import com.acme.v10jeeapp.app.security.AppPermissions;
 import com.acme.v10jeeapp.backend.DataProviderService;
 import com.acme.v10jeeapp.backend.security.entity.Role;
 import com.acme.v10jeeapp.backend.security.entity.User;
+import com.vaadin.flow.component.AbstractField.ComponentValueChangeEvent;
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.dependency.HtmlImport;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.polymertemplate.Id;
 import com.vaadin.flow.component.polymertemplate.PolymerTemplate;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.templatemodel.TemplateModel;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -30,11 +33,18 @@ public class UsersView extends PolymerTemplate<TemplateModel> {
 
     @Id("usersGrid")
     private Grid<User> usersGrid;
+
+    @Id
+    private TextField filterField;
+
     private ConfigurableFilterDataProvider<User, Void, String> dataProvider;
 
     @PostConstruct
     private void init() {
-        dataProvider = new DataProviderBuilder<>(dataProviderService).newDataProvider();
+        dataProvider = new DataProviderBuilder<>(dataProviderService)
+                .newDataProvider()
+                .withConfigurableFilter();
+        dataProvider.setFilter("");
         usersGrid.setDataProvider(dataProvider);
         usersGrid.addColumn(User::getUsername)
                 .setWidth("200px")
@@ -45,6 +55,14 @@ public class UsersView extends PolymerTemplate<TemplateModel> {
         usersGrid.addColumn(user -> user.getRoles().stream()
                 .map(Role::getId).collect(Collectors.joining(", ")))
                 .setWidth("200px").setHeader("Roles").setFlexGrow(5);
+        filterField.setValueChangeMode(ValueChangeMode.EAGER);
+        filterField.addValueChangeListener(this::onFilterChange);
+    }
+
+    private void onFilterChange(ComponentValueChangeEvent<TextField, String> event) {
+        String filter = event.getValue().trim();
+        dataProvider.setFilter(filter);
+        dataProvider.refreshAll();
     }
 
 }

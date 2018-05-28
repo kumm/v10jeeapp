@@ -8,10 +8,11 @@ import java.util.Set;
 
 @Entity
 @NamedQuery(
-        name = User.ALL_FETCH_ROLES,
-        query = "SELECT e FROM User e LEFT JOIN FETCH e.roles")
+        name = User.FILTERED_FETCH_ROLES,
+        query = "SELECT e FROM User e LEFT JOIN FETCH e.roles " +
+                "WHERE e.username like :filter")
 public class User extends AbstractEntity {
-    public static final String ALL_FETCH_ROLES = "allFetchRoles";
+    public static final String FILTERED_FETCH_ROLES = "filteredFetchRoles";
 
     @Id
     @GeneratedValue
