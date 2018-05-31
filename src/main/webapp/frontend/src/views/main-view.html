@@ -2,15 +2,35 @@
 <link rel="import" href="../../bower_components/vaadin-button/src/vaadin-button.html">
 <link rel="import" href="../../styles/shared-styles.html">
 
+
 <dom-module id="main-view">
     <style include="shared-styles">
-        .app-header {
-            display: flex;
-            flex-flow: row wrap;
-        }
     </style>
 
     <template>
+        <style>
+            :host {
+                display: flex;
+                flex-flow: column nowrap;
+                height: 100%;
+            }
+
+            .app-header {
+                display: flex;
+                flex-flow: row nowrap;
+                align-items: center;
+                justify-content: space-between;
+                padding: var(--lumo-space-s);
+                background-color: var(--lumo-shade-5pct);
+            }
+
+            .app-view {
+                display: flex;
+                flex: 1;
+                padding: var(--lumo-space-s);
+            }
+
+        </style>
         <div class="app-header">
             <div class="app-menubar">
                 <a router-link href="">Home</a>
@@ -21,7 +41,7 @@
                 <vaadin-button on-click="onLogout">Logout</vaadin-button>
             </div>
         </div>
-        <div>
+        <div class="app-view">
             <slot></slot>
         </div>
     </template>

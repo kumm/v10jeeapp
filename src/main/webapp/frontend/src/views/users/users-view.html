@@ -1,18 +1,23 @@
 <link rel="import" href="../../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../../bower_components/vaadin-grid/vaadin-grid.html">
-<link rel="import" href="../../../bower_components/vaadin-grid/vaadin-grid-column.html">
 <link rel="import" href="../../../bower_components/vaadin-text-field/src/vaadin-text-field.html">
 <link rel="import" href="../../../styles/shared-styles.html">
 
 <dom-module id="users-view">
-    <style include="shared-styles">
-    </style>
 
     <template>
+        <style include="shared-styles">
+            :host {
+                display: flex;
+                flex: 1;
+                flex-flow: column nowrap;
+            }
+        </style>
         <div>
+            <label>Search</label>
             <vaadin-text-field id="filterField" autofocus/>
         </div>
-        <vaadin-grid id="usersGrid"/>
+        <vaadin-grid id="usersGrid" style="flex: 1"/>
     </template>
 
     <script>
