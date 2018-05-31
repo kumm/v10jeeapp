@@ -24,5 +24,9 @@ public class SecurityInit {
         userService.grant(adminId, "admin");
 
         userService.createUser("joe", "joe");
+
+        for (int i = 1; i < 500; i++) {
+            userService.createUser(String.format("user%03d", i), "pass");
+        }
     }
 }
