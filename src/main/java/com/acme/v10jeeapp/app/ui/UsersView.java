@@ -4,6 +4,7 @@ import com.acme.v10jeeapp.app.DataProviderBuilder;
 import com.acme.v10jeeapp.backend.DataProviderService;
 import com.acme.v10jeeapp.backend.security.entity.Role;
 import com.acme.v10jeeapp.backend.security.entity.User;
+import com.vaadin.cdi.annotation.RouteScoped;
 import com.vaadin.flow.component.AbstractField.ComponentValueChangeEvent;
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.dependency.HtmlImport;
@@ -18,7 +19,6 @@ import com.vaadin.flow.router.ParentLayout;
 import com.vaadin.flow.router.RoutePrefix;
 import com.vaadin.flow.router.RouterLayout;
 import com.vaadin.flow.templatemodel.TemplateModel;
-import com.wcs.vaadin.flow.cdi.RouteScoped;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
