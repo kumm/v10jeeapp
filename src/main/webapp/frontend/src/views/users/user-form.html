@@ -1,0 +1,48 @@
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../bower_components/vaadin-grid/vaadin-grid.html">
+<link rel="import" href="../../../bower_components/vaadin-text-field/src/vaadin-text-field.html">
+<link rel="import" href="../../../bower_components/vaadin-text-field/src/vaadin-password-field.html">
+<link rel="import" href="../../../styles/shared-styles.html">
+
+<dom-module id="user-form">
+
+    <template>
+        <style include="shared-styles">
+            :host {
+                display: flex;
+                flex-flow: column nowrap;
+            }
+
+            vaadin-text-field, vaadin-password-field {
+                width: 200px;
+            }
+        </style>
+        <vaadin-form-layout id="formLayout" class="user-details">
+            <vaadin-form-item>
+                <label slot="label">Username</label>
+                <vaadin-text-field value="{{username}}" autofocus required/>
+            </vaadin-form-item>
+            <vaadin-form-item>
+                <label slot="label">Password</label>
+                <vaadin-password-field value="{{password}}" required/>
+            </vaadin-form-item>
+            <vaadin-form-item>
+                <label slot="label">Retype password</label>
+                <vaadin-password-field value="{{password2}}" required/>
+            </vaadin-form-item>
+            <vaadin-form-item>
+                <vaadin-button on-click="onSave">Save</vaadin-button>
+            </vaadin-form-item>
+        </vaadin-form-layout>
+    </template>
+
+    <script>
+        class UserForm extends Polymer.Element {
+            static get is() {
+                return 'user-form'
+            }
+        }
+
+        customElements.define(UserForm.is, UserForm);
+    </script>
+</dom-module>

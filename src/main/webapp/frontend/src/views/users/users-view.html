@@ -10,14 +10,23 @@
             :host {
                 display: flex;
                 flex: 1;
+                flex-flow: row nowrap;
+            }
+
+            .users-view-left {
+                display: flex;
+                flex: 1;
                 flex-flow: column nowrap;
             }
         </style>
-        <div>
-            <label>Search</label>
-            <vaadin-text-field id="filterField" autofocus/>
+        <div class="users-view-left">
+            <div>
+                <label>Search</label>
+                <vaadin-text-field id="filterField" autofocus/>
+            </div>
+            <vaadin-grid id="usersGrid" style="flex: 1"/>
         </div>
-        <vaadin-grid id="usersGrid" style="flex: 1"/>
+        <slot></slot>
     </template>
 
     <script>
